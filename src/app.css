@@ -1,0 +1,23 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body {
+	background-color: theme('colors.midnight.crow');
+	color: theme('colors.silver.50');
+}
+
+
+::selection {
+    background: rgba(35,131,226,.28);
+}
+
+::-webkit-scrollbar {
+    width: 10px;
+    background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+    background: theme('colors.midnight.pitch');
+    border-radius: 1px;
+}
