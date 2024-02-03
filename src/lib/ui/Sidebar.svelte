@@ -10,7 +10,8 @@
 
 <nav
 	class={$navbarState}
-	in:slide={{ axis: 'x' }}
+	in:slide={{ axis: 'x', duration: 500 }}
+	out:slide={{ axis: 'x', duration: 500 }}
 	on:mouseenter={() => (isHoveringNavbar = true)}
 	on:mouseleave={() => (isHoveringNavbar = false)}
 	aria-label="Sidebar"

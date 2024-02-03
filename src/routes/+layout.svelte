@@ -6,7 +6,7 @@
 	import { fade } from 'svelte/transition';
 </script>
 
-<div class={`${$navbarState === 'normal-opened' ? 'flex' : 'block'} `}>
+<div class="block">
 	{#if $navbarState === 'normal-opened'}
 		<Sidebar />
 	{/if}
