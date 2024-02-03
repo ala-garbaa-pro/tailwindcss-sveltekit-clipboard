@@ -11,7 +11,7 @@
 		<Sidebar />
 	{/if}
 
-	<div class="flex flex-col w-full" in:fade>
+	<div class="flex flex-col w-full" in:fade={{ duration: 600 }}>
 		<Header />
 		<main class="p-4">
 			<slot />
