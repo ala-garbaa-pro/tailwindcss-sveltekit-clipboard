@@ -1,0 +1,4 @@
+- Creating a project | create svelte app
+- install tailwindcss sveltekit | Install Tailwind CSS with SvelteKit
+- how to add colors to tailwind css | **Customizing Colors | Adding additional colors**
+    - Adding Base Styles | tailwindcss add global css
