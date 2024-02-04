@@ -1,7 +1,7 @@
 import { fail, json } from "@sveltejs/kit";
 
 export const GET = async ({ setHeaders, request, locals: { pba } }) => {
-    console.log(`🟩 /api/i18n/+server.ts`);
+    console.log(`🟩 /api/clipboards/+server.ts`);
 
     // Casting request.url to URL type
     const url = new URL(request.url);

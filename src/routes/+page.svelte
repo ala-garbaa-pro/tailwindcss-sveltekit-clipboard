@@ -40,8 +40,10 @@
 			/>
 		{/each}
 
-		<p>{$clipboardsStore.items.length} of {$clipboardsStore.totalItems} clipboards</p>
+		{#if $clipboardsStore.items.length !== $clipboardsStore.totalItems}
+			<LoadMoreButton on:click={() => loadMore()} />
+		{/if}
 
-		<LoadMoreButton on:click={() => loadMore()} />
+		<p>{$clipboardsStore.items.length} of {$clipboardsStore.totalItems} clipboards</p>
 	</div>
 {/if}

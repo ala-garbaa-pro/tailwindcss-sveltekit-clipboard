@@ -15,3 +15,15 @@ export type ClipboardStoreType = {
     perPage: number;
     page: number;
 }
+
+
+export const validSearchTypes = ['title', 'keywords', 'content'] as const
+
+export type SearchClipboardByType = typeof validSearchTypes[number]
+
+export type ClipboardSearchResponseType = {
+    updated: string;
+    id: string;
+    keywords: string;
+    title: string;
+}

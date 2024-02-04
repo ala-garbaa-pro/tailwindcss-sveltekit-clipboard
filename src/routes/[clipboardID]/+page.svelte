@@ -1,12 +1,15 @@
 <!-- FILE: +page.svelte -->
 
 <script lang="ts">
+	import { searchState } from '$lib/stores/navbar.js';
 	import { onMount } from 'svelte';
 
 	export let data;
 	const { clipboard } = data;
 
 	onMount(() => {
+		searchState.set('closed');
+
 		window.Prism.highlightAll();
 
 		const preElements: NodeListOf<HTMLPreElement> =
