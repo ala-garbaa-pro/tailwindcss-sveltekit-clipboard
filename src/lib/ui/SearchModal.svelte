@@ -21,6 +21,7 @@
 
 	const onSearchHandler = async () => {
 		if (searchValue.trim() === '') return;
+		searchedClipboards = [];
 		try {
 			const response = await fetch(
 				`/api/clipboards/search?searchValue=${searchValue.trim()}&searchBy=${searchBy}`
