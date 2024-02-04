@@ -46,7 +46,7 @@
 	} */
 
 	.normal-opened {
-		@apply block relative text-sm bg-midnight-grease h-screen w-60 px-4 py-4;
+		@apply block fixed text-sm bg-midnight-grease h-screen w-60 px-4 py-4;
 	}
 
 	.normal-closed {

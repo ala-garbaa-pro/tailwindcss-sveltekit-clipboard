@@ -29,17 +29,19 @@
 {#if $clipboardsStore && $clipboardsStore.items && $clipboardsStore.items.length === 0}
 	<Skeleton />
 {:else}
-	{#each $clipboardsStore.items as clipboard}
-		<ClipboardPresenter
-			id={clipboard.id}
-			title={clipboard.title}
-			keywords={clipboard.keywords}
-			created={clipboard.created}
-			updated={clipboard.updated}
-		/>
-	{/each}
+	<div class="block space-y-4">
+		{#each $clipboardsStore.items as clipboard}
+			<ClipboardPresenter
+				id={clipboard.id}
+				title={clipboard.title}
+				keywords={clipboard.keywords}
+				created={clipboard.created}
+				updated={clipboard.updated}
+			/>
+		{/each}
 
-	<p>{$clipboardsStore.items.length} of {$clipboardsStore.totalItems} clipboards</p>
+		<p>{$clipboardsStore.items.length} of {$clipboardsStore.totalItems} clipboards</p>
 
-	<LoadMoreButton on:click={() => loadMore()} />
+		<LoadMoreButton on:click={() => loadMore()} />
+	</div>
 {/if}

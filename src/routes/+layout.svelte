@@ -1,9 +1,13 @@
 <script lang="ts">
 	import '../app.css';
+	import '$lib/vendors/prismjs/prism.css';
+	import '$lib/vendors/prismjs/prism.js';
+
+
 	import Sidebar from '$lib/ui/Sidebar.svelte';
 	import { navbarState, searchState } from '$lib/stores/navbar';
 	import Header from '$lib/ui/Header.svelte';
-	import { fade } from 'svelte/transition';
+	import { fade, slide } from 'svelte/transition';
 	import SearchModal from '$lib/ui/SearchModal.svelte';
 
 	function handleKeyDown(event: KeyboardEvent) {
@@ -28,11 +32,12 @@
 
 	{#if $navbarState === 'normal-opened'}
 		<Sidebar />
+		<div out:slide={{ axis: 'x' }} class="w-[15rem] h-screen"></div>
 	{/if}
 
 	<div class="flex flex-col w-full" in:fade={{ duration: 600 }}>
 		<Header />
-		<main class="p-4 w-[50vw] m-auto">
+		<main class="p-4 w-[50vw] m-auto mt-10 relative">
 			<slot />
 		</main>
 	</div>

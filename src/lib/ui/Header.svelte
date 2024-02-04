@@ -1,17 +1,26 @@
 <script lang="ts">
 	import { navbarState, searchState } from '$lib/stores/navbar';
+	import { fly, slide } from 'svelte/transition';
+	import AppName from './AppName.svelte';
 	import Icon from './Icon.svelte';
 </script>
 
 <div class="flex items-center justify-between w-full px-3 pt-4 pr-2 overflow-hidden h-14">
 	<div class="flex">
 		{#if $navbarState !== 'normal-opened'}
-			<button class="flex" on:click={() => navbarState.set('normal-opened')}>
-				<Icon descriptors={['M3,6H21V8H3V6M3,11H21V13H3V11M3,16H21V18H3V16Z']} />
-			</button>
+			<div class="flex" out:slide={{ axis: 'x', duration: 500 }}>
+				<button class="flex mr-2" on:click={() => navbarState.set('normal-opened')}>
+					<Icon descriptors={['M3,6H21V8H3V6M3,11H21V13H3V11M3,16H21V18H3V16Z']} />
+				</button>
+				<AppName />
+			</div>
 		{/if}
 	</div>
-	<div class="relative z-0 flex items-center justify-center flex-1 px-2">
+	<div
+		class={`relative z-0 flex items-center justify-center flex-1 px-2 animate-margin ${
+			$navbarState !== 'normal-opened' ? 'mr-[15rem]' : ''
+		}`}
+	>
 		<div class="w-full sm:max-w-xs">
 			<button
 				on:click={() => searchState.set('opened')}

@@ -1,3 +1,3 @@
-<h1 class="font-semibold cursor-default select-none truncate overflow-hidden p4">
-	TailwindCSS SvelteKit Clipboard
+<h1 class="overflow-hidden font-semibold truncate select-none p4">
+	<a href="/">TailwindCSS SvelteKit Clipboard</a>
 </h1>
