@@ -14,7 +14,7 @@
 	class="block px-4 py-5 border rounded-md border-gray-50/10 hover:border-gray-50/15 sm:px-6"
 >
 	<div class="flex flex-wrap items-center space-y-4 justify-betweenspace-y-4">
-		<div class="flex justify-between w-full">
+		<div class="flex flex-col justify-between w-full sm:flex-row">
 			<h3 class="text-base font-semibold leading-6 text-gray-200">{title}</h3>
 
 			<span title={formatDateTime(created)} class="flex items-center"
@@ -39,13 +39,37 @@
 				>
 				Created {formatTimeAgo(created)}</span
 			>
+			{#if updated !== created}
+				<span title={formatDateTime(created)} class="flex items-center sm:hidden">
+					<svg
+						stroke="currentColor"
+						class="mr-1"
+						fill="currentColor"
+						stroke-width="0"
+						viewBox="0 0 512 512"
+						height="1em"
+						width="1em"
+						xmlns="http://www.w3.org/2000/svg"
+						><path
+							fill="none"
+							stroke-linecap="round"
+							stroke-miterlimit="10"
+							stroke-width="32"
+							d="m400 148-21.12-24.57A191.43 191.43 0 0 0 240 64C134 64 48 150 48 256s86 192 192 192a192.09 192.09 0 0 0 181.07-128"
+						></path><path
+							d="M464 97.42V208a16 16 0 0 1-16 16H337.42c-14.26 0-21.4-17.23-11.32-27.31L436.69 86.1C446.77 76 464 83.16 464 97.42z"
+						></path></svg
+					>
+					Updated {formatTimeAgo(updated)}</span
+				>
+			{/if}
 		</div>
 
-		<div class="flex justify-between w-full">
+		<div class="flex flex-col justify-between w-full sm:flex-row">
 			<p class="mt-1 text-sm text-gray-500">{keywords}</p>
 
 			{#if updated !== created}
-				<span title={formatDateTime(created)} class="flex items-center">
+				<span title={formatDateTime(created)} class="items-center hidden sm:flex">
 					<svg
 						stroke="currentColor"
 						class="mr-1"

@@ -1,5 +1,7 @@
 <script lang="ts">
 	import { searchState } from '$lib/stores/navbar';
+	import { type Clipboard } from '$lib/types/clipboard.type';
+	import { keyUserCache, userCacheStore } from '$lib/stores/userCacheStore';
 	import type {
 		ClipboardSearchResponseType,
 		SearchClipboardByType
@@ -7,8 +9,9 @@
 	import { formatTimeAgo } from '$lib/utils/date/formatTimeAgo';
 	import { afterUpdate } from 'svelte';
 	import { fade, fly } from 'svelte/transition';
+	import RecentClipboards from './RecentClipboards.svelte';
 
-	let searchedClipboards: ClipboardSearchResponseType[];
+	let searchedClipboards: Clipboard[];
 	let inputElement: HTMLInputElement;
 
 	let searchValue: string;
@@ -20,7 +23,7 @@
 	let debounceTimer: NodeJS.Timeout;
 
 	const onSearchHandler = async () => {
-		if (searchValue.trim() === '') return;
+		if (searchValue !== undefined && searchValue.trim() === '') return;
 		searchedClipboards = [];
 		try {
 			const response = await fetch(
@@ -43,6 +46,7 @@
 	};
 
 	const handleInput = () => {
+		if (searchValue.trim() === '') return;
 		searching = true;
 		// Clear the previous timer
 		clearTimeout(debounceTimer);
@@ -59,7 +63,7 @@
 		}
 	});
 
-	$: if (searchBy) {
+	$: if (searchBy && searchValue) {
 		onSearchHandler();
 	}
 </script>
@@ -67,7 +71,7 @@
 <div
 	out:fly
 	in:fade
-	class="cursor-default w-[38vw] fixed z-50 transform -translate-x-1/2 -translate-y-1/2 rounded-lg left-1/2 top-1/2 bg-midnight-metal h-[500px]"
+	class="cursor-default w-[90vw] md:w-[70vw] lg:w-[50vw] xl:w-[38vw] fixed z-50 transform -translate-x-1/2 -translate-y-1/2 rounded-lg left-1/2 top-1/2 bg-midnight-metal h-[500px]"
 >
 	<div class="flex p-4 border-b-[.25px] border-b-midnight-pitch">
 		<svg width="24" height="24" fill="none" aria-hidden="true" class="flex-none mr-3"
@@ -101,9 +105,9 @@
 	</div>
 
 	<div class="flex flex-col">
-		<div class="flex p-4 space-x-5 border-b-[.25px] border-b-midnight-pitch">
-			<p class="text-sm font-semibold text-white">Search by</p>
-			<div class="flex items-center gap-x-2">
+		<div class="flex flex-col sm:flex-row sm:items-center px-4 pb-4 border-b-[.25px] border-b-midnight-pitch flex-wrap">
+			<div class="mt-4 text-sm font-semibold text-white">Search by</div>
+			<div class="flex items-center mt-4 ml-4 gap-x-2">
 				<input
 					id="title"
 					name="search-by"
@@ -119,7 +123,7 @@
 				>
 			</div>
 
-			<div class="flex items-center gap-x-2">
+			<div class="flex items-center mt-4 ml-4 gap-x-2">
 				<input
 					id="keywords"
 					name="search-by"
@@ -135,7 +139,7 @@
 				>
 			</div>
 
-			<div class="flex items-center gap-x-2">
+			<div class="flex items-center mt-4 ml-4 gap-x-2">
 				<input
 					id="content"
 					name="search-by"
@@ -154,23 +158,45 @@
 	</div>
 	<div class="flex flex-col py-4 pl-4 pr-2">
 		<div class="flex flex-col h-[355px] overflow-y-scroll space-y-2">
-			{#if searchedClipboards && searchedClipboards.length > 0}
+			{#if searchValue && searchValue.trim() !== '' && searchedClipboards && searchedClipboards.length > 0}
 				{#each searchedClipboards as clipboard}
-					<a
-						href={`/${clipboard.id}`}
-						class="block w-full px-4 py-2 rounded-md bg-midnight-spider hover:bg-midnight-pitch"
+					<button
+						on:click={(event) => {
+							event.preventDefault();
+							// get current userCacheStore object from store
+							let _cloneOfUserCacheStore = $userCacheStore;
+
+							// add the new clipboard to the history array
+							_cloneOfUserCacheStore.history.push(clipboard);
+
+							// set the new userCacheStore object to store
+							userCacheStore.set(_cloneOfUserCacheStore);
+							localStorage.setItem(keyUserCache, JSON.stringify(_cloneOfUserCacheStore));
+
+							// finaly redirect to the page
+							window.location.href = `/${clipboard.id}`;
+						}}
+						class="flex w-full px-4 py-2 rounded-md bg-midnight-spider hover:bg-midnight-pitch"
 					>
-						<div class="flex justify-between">
+						<div class="flex flex-row justify-between sm:flex-col">
 							<h1 class="font-semibold">{clipboard.title}</h1>
 							<h3 class="text-[10px]">#{clipboard.id}</h3>
 						</div>
 
-						<div class="flex justify-between">
+						<div class="flex flex-row justify-between sm:flex-col">
 							<h3 class="text-sm">{clipboard.keywords}</h3>
 							<h3 class="text-xs">Updated {formatTimeAgo(clipboard.updated)}</h3>
 						</div>
-					</a>
+					</button>
 				{/each}
+			{/if}
+
+			{#if searchValue && searchValue.trim() !== '' && !searching && searchedClipboards && searchedClipboards.length === 0}
+				<p>No results for "{searchValue.trim()}"</p>
+			{/if}
+
+			{#if (!searching && searchValue === undefined) || (searchValue && searchValue.trim() === '')}
+				<RecentClipboards />
 			{/if}
 
 			{#if searching}

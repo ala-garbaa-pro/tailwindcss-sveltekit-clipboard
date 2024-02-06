@@ -82,8 +82,8 @@
 </script>
 
 {#if clipboard && Object.keys(clipboard).length > 0}
-	<div class="px-6 py-32 rounded lg:px-8">
-		<div class="max-w-3xl mx-auto text-base leading-7 text-gray-100">
+	<div class="px-6 py-[5vw] rounded lg:px-8">
+		<div class="mx-auto text-base leading-7 text-gray-100">
 			<p class="text-base font-semibold leading-7 text-blue-400">
 				<a class="flex items-center mb-10" href="/"
 					><svg
@@ -107,8 +107,8 @@
 			<h1 class="mt-2 text-3xl font-bold tracking-tight text-gray-100 sm:text-4xl">
 				{clipboard.title}
 			</h1>
-			<p class="mt-6 text-xl leading-8 text-gray-50">{clipboard.keywords}</p>
-			<div class="max-w-2xl mt-10">{@html clipboard.content}</div>
+			<p class="mt-6 text-xl leading-8 text-gray-50/50">{clipboard.keywords}</p>
+			<div class="mt-10">{@html clipboard.content}</div>
 		</div>
 	</div>
 {:else}
