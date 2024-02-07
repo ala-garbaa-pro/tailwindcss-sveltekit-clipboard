@@ -9,12 +9,7 @@
 	import { fade, slide } from 'svelte/transition';
 	import SearchModal from '$lib/ui/SearchModal.svelte';
 	import { onMount } from 'svelte';
-	import {
-		initialUserCache,
-		keyUserCache,
-		userCacheStore,
-		type UserCacheStoreType
-	} from '$lib/stores/userCacheStore';
+	import { getLSData, userCacheStore } from '$lib/stores/userCacheStore';
 
 	function handleKeyDown(event: KeyboardEvent) {
 		// Check if the Ctrl (or Command on macOS) key is pressed and the key is 'K'
@@ -32,19 +27,8 @@
 
 	onMount(() => {
 		// get cached user info from user browser local storage
-		const userCacheLocalStorage = localStorage.getItem(keyUserCache);
-		if (userCacheLocalStorage) {
-			const userCache: UserCacheStoreType = JSON.parse(userCacheLocalStorage);
-			userCacheStore.set(userCache);
-		} else {
-			localStorage.setItem(keyUserCache, JSON.stringify(initialUserCache));
-		}
-
-		// // get width of the screen
-		// const width = window.innerWidth;
-		// if (width < 1024) {
-		// 	isNavbarOpen.set('mobile-closed');
-		// }
+		const data = getLSData();
+		userCacheStore.set(data);
 	});
 </script>
 
@@ -68,7 +52,9 @@
 		</main>
 		<div class="flex items-center justify-center px-2 py-3">
 			Copyright © <span>{new Date().getFullYear()}</span>
-			<a class="px-2 font-bold text-blue-500 hover:underline" href="https://alagarbaa.com/">Ala GARBAA.</a>
+			<a class="px-2 font-bold text-blue-500 hover:underline" href="https://alagarbaa.com/"
+				>Ala GARBAA.</a
+			>
 		</div>
 	</div>
 </div>

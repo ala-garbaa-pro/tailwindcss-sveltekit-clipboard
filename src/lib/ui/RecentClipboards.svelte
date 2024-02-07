@@ -1,13 +1,39 @@
 <script lang="ts">
-	import { userCacheStore } from '$lib/stores/userCacheStore';
+	import { addFavorite, removeRecent, userCacheStore } from '$lib/stores/userCacheStore';
+	import type { Clipboard } from '$lib/types/clipboard.type';
 	import { formatTimeAgo } from '$lib/utils/date/formatTimeAgo';
+	import { fade, fly } from 'svelte/transition';
+
+	let busy = false;
+
+	const handleFavoriteClick = (clipboard: Clipboard) => {
+		if (busy) return;
+		busy = true;
+		const newData = addFavorite(clipboard);
+		userCacheStore.set(newData);
+		busy = false;
+	};
+
+	const handleOnRemoveRecentClick = (clipboard: Clipboard) => {
+		if (busy) return;
+		busy = true;
+
+		const newData = removeRecent(clipboard.id);
+
+		userCacheStore.set(newData);
+		busy = false;
+	};
 </script>
 
-<h2 class="text-xl">Recent</h2>
-
 {#if $userCacheStore.history.length > 0}
-	{#each $userCacheStore.history as clipboard}
-		<div class="flex w-full px-4 py-2 rounded-md bg-midnight-spider hover:bg-midnight-pitch">
+	<h2 class="text-xl">Recent</h2>
+
+	{#each $userCacheStore.history.slice(0, 3) as clipboard}
+		<div
+			in:fade
+			out:fly
+			class="flex w-full px-4 py-2 rounded-md bg-midnight-spider hover:bg-midnight-pitch"
+		>
 			<a href={`/${clipboard.id}`} class="w-full pr-6">
 				<div class="flex flex-col justify-between sm:flex-row">
 					<h1 class="font-semibold">{clipboard.title}</h1>
@@ -20,7 +46,9 @@
 				</div>
 			</a>
 			<div class="flex flex-col justify-between w-5">
-				<span class="cursor-pointer hover:text-red-400"
+				<button
+					on:click={() => handleOnRemoveRecentClick(clipboard)}
+					class="cursor-pointer hover:text-red-400"
 					><svg width="20" height="20" viewBox="0 0 20 20">
 						<title>Remove from recent</title>
 						<path
@@ -32,9 +60,11 @@
 							stroke-linecap="round"
 							stroke-linejoin="round"
 						></path>
-                    </svg></span
+					</svg></button
 				>
-				<span class="cursor-pointer hover:text-yellow-400"
+				<button
+					on:click={() => handleFavoriteClick(clipboard)}
+					class="cursor-pointer hover:text-yellow-400"
 					><svg width="20" height="20" viewBox="0 0 20 20">
 						<title>Add to favorites</title>
 						<path
@@ -45,7 +75,7 @@
 							fill-rule="evenodd"
 							stroke-linejoin="round"
 						></path></svg
-					></span
+					></button
 				>
 			</div>
 		</div>

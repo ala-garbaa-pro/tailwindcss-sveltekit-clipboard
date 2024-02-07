@@ -1,15 +1,13 @@
 <script lang="ts">
 	import { searchState } from '$lib/stores/navbar';
 	import { type Clipboard } from '$lib/types/clipboard.type';
-	import { keyUserCache, userCacheStore } from '$lib/stores/userCacheStore';
-	import type {
-		ClipboardSearchResponseType,
-		SearchClipboardByType
-	} from '$lib/types/clipboard.type';
-	import { formatTimeAgo } from '$lib/utils/date/formatTimeAgo';
+	import type { SearchClipboardByType } from '$lib/types/clipboard.type';
 	import { afterUpdate } from 'svelte';
 	import { fade, fly } from 'svelte/transition';
 	import RecentClipboards from './RecentClipboards.svelte';
+	import FavoriteClipboards from './FavoriteClipboards.svelte';
+	import SearchItemSkeleton from './SearchItemSkeleton.svelte';
+	import SearchItem from './SearchItem.svelte';
 
 	let searchedClipboards: Clipboard[];
 	let inputElement: HTMLInputElement;
@@ -18,6 +16,7 @@
 
 	let searching = false;
 
+	let firstSearchBy: SearchClipboardByType = 'title';
 	let searchBy: SearchClipboardByType = 'title';
 
 	let debounceTimer: NodeJS.Timeout;
@@ -53,8 +52,9 @@
 
 		// Set a new timer
 		debounceTimer = setTimeout(() => {
+			console.log('B');
 			onSearchHandler();
-		}, 1000);
+		}, 500);
 	};
 
 	afterUpdate(() => {
@@ -63,7 +63,7 @@
 		}
 	});
 
-	$: if (searchBy && searchValue) {
+	$: if (searchBy !== firstSearchBy && searchValue) {
 		onSearchHandler();
 	}
 </script>
@@ -105,7 +105,9 @@
 	</div>
 
 	<div class="flex flex-col">
-		<div class="flex flex-col sm:flex-row sm:items-center px-4 pb-4 border-b-[.25px] border-b-midnight-pitch flex-wrap">
+		<div
+			class="flex flex-col sm:flex-row sm:items-center px-4 pb-4 border-b-[.25px] border-b-midnight-pitch flex-wrap"
+		>
 			<div class="mt-4 text-sm font-semibold text-white">Search by</div>
 			<div class="flex items-center mt-4 ml-4 gap-x-2">
 				<input
@@ -160,34 +162,7 @@
 		<div class="flex flex-col h-[355px] overflow-y-scroll space-y-2">
 			{#if searchValue && searchValue.trim() !== '' && searchedClipboards && searchedClipboards.length > 0}
 				{#each searchedClipboards as clipboard}
-					<button
-						on:click={(event) => {
-							event.preventDefault();
-							// get current userCacheStore object from store
-							let _cloneOfUserCacheStore = $userCacheStore;
-
-							// add the new clipboard to the history array
-							_cloneOfUserCacheStore.history.push(clipboard);
-
-							// set the new userCacheStore object to store
-							userCacheStore.set(_cloneOfUserCacheStore);
-							localStorage.setItem(keyUserCache, JSON.stringify(_cloneOfUserCacheStore));
-
-							// finaly redirect to the page
-							window.location.href = `/${clipboard.id}`;
-						}}
-						class="flex w-full px-4 py-2 rounded-md bg-midnight-spider hover:bg-midnight-pitch"
-					>
-						<div class="flex flex-row justify-between sm:flex-col">
-							<h1 class="font-semibold">{clipboard.title}</h1>
-							<h3 class="text-[10px]">#{clipboard.id}</h3>
-						</div>
-
-						<div class="flex flex-row justify-between sm:flex-col">
-							<h3 class="text-sm">{clipboard.keywords}</h3>
-							<h3 class="text-xs">Updated {formatTimeAgo(clipboard.updated)}</h3>
-						</div>
-					</button>
+					<SearchItem {clipboard} />
 				{/each}
 			{/if}
 
@@ -197,34 +172,12 @@
 
 			{#if (!searching && searchValue === undefined) || (searchValue && searchValue.trim() === '')}
 				<RecentClipboards />
+				<FavoriteClipboards />
 			{/if}
 
 			{#if searching}
 				{#each new Array(9) as _}
-					<div class="flex">
-						<div class="block w-full px-4 py-2 rounded-md bg-midnight-spider">
-							<div class="flex justify-between">
-								<h1 class="font-semibold">
-									<div class="h-2.5 bg-gray-300 mt-1 rounded-full dark:bg-gray-600 w-96"></div>
-								</h1>
-								<h3 class="text-[10px] flex justify-center items-center">
-									# <div class="ml-1 h-2.5 bg-gray-300 rounded-full dark:bg-gray-600 w-24"></div>
-								</h3>
-							</div>
-
-							<div class="flex justify-between">
-								<h3 class="text-sm">
-									<div class="w-32 h-2 mt-2 bg-gray-200 rounded-full dark:bg-gray-700"></div>
-								</h3>
-								<h3 class="flex items-center justify-center text-xs">
-									Updated <div
-										class="h-2 ml-1 bg-gray-200 rounded-full w-14 dark:bg-gray-700"
-									></div>
-								</h3>
-							</div>
-						</div>
-						<div class="w-4 h-1"></div>
-					</div>
+					<SearchItemSkeleton />
 				{/each}
 			{/if}
 		</div>

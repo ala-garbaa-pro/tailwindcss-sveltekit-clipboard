@@ -3,7 +3,7 @@
 	import Icon from '$lib/ui/Icon.svelte';
 	import AppName from '$lib/ui/AppName.svelte';
 	import { slide } from 'svelte/transition';
-	import NavItem from './NavItem.svelte';
+	import { userCacheStore } from '$lib/stores/userCacheStore';
 
 	let isHoveringNavbar = false;
 </script>
@@ -32,11 +32,25 @@
 	</div>
 
 	<div class="flex flex-col mt-4 space-y-1">
-		<NavItem />
-		<NavItem />
-		<NavItem />
-		<NavItem />
-		<NavItem />
+		<p class="mt-4 font-semibold text-md">Favorites</p>
+		{#each $userCacheStore.favorites as { title, id }}
+			<a
+				data-sveltekit-reload
+				href={`/${id}`}
+				class="px-4 py-1 truncate rounded cursor-pointer hover:bg-midnight-pitch">{title}</a
+			>
+		{/each}
+
+		<div class="w-4 h-4" />
+
+		<p class="font-semibold text-md">Recent</p>
+		{#each $userCacheStore.history as { title, id }}
+			<a
+				data-sveltekit-reload
+				href={`/${id}`}
+				class="px-4 py-1 truncate rounded cursor-pointer hover:bg-midnight-pitch">{title}</a
+			>
+		{/each}
 	</div>
 </nav>
 

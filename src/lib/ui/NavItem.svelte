@@ -1,1 +1,0 @@
-<p class="px-4 py-1 rounded cursor-pointer hover:bg-midnight-pitch">NavItem</p>
