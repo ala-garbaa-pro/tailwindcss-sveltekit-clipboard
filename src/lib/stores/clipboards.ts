@@ -6,7 +6,8 @@ const initialData: ClipboardStoreType = {
     items: [],
     totalPages: 0,
     totalItems: 0,
-    perPage: 10, // You can set your default perPage value here
+    loadedItems: 0,
+    perPage: 8,
     page: 1,
 };
 

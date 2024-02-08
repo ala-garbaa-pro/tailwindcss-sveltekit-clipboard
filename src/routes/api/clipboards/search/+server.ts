@@ -26,10 +26,15 @@ export const GET = async ({ setHeaders, request, locals: { pba } }) => {
     }
 
     // Assuming queryParams.get('searchValue') contains the value to search for
-    const searchValue = queryParams.get('searchValue');
+    let searchValue = queryParams.get('searchValue');
 
     if (typeof searchValue !== "string" || searchValue === "") {
         return json({ error: "searchValue is invalid" });
+    }
+
+    if (searchBy === "title" || searchBy === "keywords") {
+        // lowercase the searchValue
+        searchValue = searchValue.toLowerCase();
     }
 
 

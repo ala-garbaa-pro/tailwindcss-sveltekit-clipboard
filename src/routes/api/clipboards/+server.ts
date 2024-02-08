@@ -27,7 +27,7 @@ export const GET = async ({ setHeaders, request, locals: { pba } }) => {
 
     // as the underlying data
     setHeaders({
-        'cache-control': `public, max-age=${15 * 60}`
+        'cache-control': `public, max-age=${15 * 60}` // 15 minutes
     });
 
     try {

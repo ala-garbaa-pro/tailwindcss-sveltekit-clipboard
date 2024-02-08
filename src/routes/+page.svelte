@@ -6,7 +6,30 @@
 	import { onMount } from 'svelte';
 	import type { ClipboardStoreType } from '$lib/types/clipboard.type';
 
-	function loadMore() {}
+	async function loadMore() {
+		const nextPage = $clipboardsStore.page + 1;
+		try {
+			const response = await fetch(`/api/clipboards?page=${nextPage}`);
+			if (!response.ok) {
+				// Handle error
+				console.error(`Error fetching data. Status: ${response.status}`);
+				return;
+			}
+
+			const apiResponse: ClipboardStoreType = await response.json();
+
+			let cloneClipboardsStore = { ...$clipboardsStore };
+
+			cloneClipboardsStore.page = nextPage;
+			cloneClipboardsStore.items = [...$clipboardsStore.items, ...apiResponse.items];
+			cloneClipboardsStore.loadedItems = $clipboardsStore.loadedItems + apiResponse.items.length;
+
+			clipboardsStore.set(cloneClipboardsStore);
+		} catch (error) {
+			// Handle fetch or parsing error
+			console.error('Error:', error);
+		}
+	}
 
 	onMount(async () => {
 		try {
@@ -18,7 +41,7 @@
 			}
 
 			const apiResponse: ClipboardStoreType = await response.json();
-			clipboardsStore.set(apiResponse);
+			clipboardsStore.set({ ...apiResponse, loadedItems: apiResponse.items.length });
 		} catch (error) {
 			// Handle fetch or parsing error
 			console.error('Error:', error);
@@ -44,6 +67,6 @@
 			<LoadMoreButton on:click={() => loadMore()} />
 		{/if}
 
-		<p>{$clipboardsStore.items.length} of {$clipboardsStore.totalItems} clipboards</p>
+		<p>{$clipboardsStore.loadedItems} of {$clipboardsStore.totalItems} clipboards</p>
 	</div>
 {/if}

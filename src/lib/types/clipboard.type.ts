@@ -14,6 +14,7 @@ export type ClipboardStoreType = {
     totalItems: number;
     perPage: number;
     page: number;
+    loadedItems: number;
 }
 
 
