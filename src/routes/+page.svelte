@@ -6,7 +6,11 @@
 	import { onMount } from 'svelte';
 	import type { ClipboardStoreType } from '$lib/types/clipboard.type';
 
+
+	let loading = false
+
 	async function loadMore() {
+		loading = true;
 		const nextPage = $clipboardsStore.page + 1;
 		try {
 			const response = await fetch(`/api/clipboards?page=${nextPage}`);
@@ -29,6 +33,8 @@
 			// Handle fetch or parsing error
 			console.error('Error:', error);
 		}
+
+		loading = false;
 	}
 
 	onMount(async () => {
@@ -63,7 +69,7 @@
 			/>
 		{/each}
 
-		{#if $clipboardsStore.items.length !== $clipboardsStore.totalItems}
+		{#if !loading && $clipboardsStore.items.length !== $clipboardsStore.totalItems}
 			<LoadMoreButton on:click={() => loadMore()} />
 		{/if}
 
