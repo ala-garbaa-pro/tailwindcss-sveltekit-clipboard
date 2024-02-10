@@ -37,7 +37,7 @@ export function initUI(searchState: Writable<"opened" | "closed">) {
         codeLabel.innerText = language || 'CODE';
         codeLabel.style.position = 'relative';
         codeLabel.style.top = '0';
-        codeLabel.style.left = '8px';
+        codeLabel.style.right = '8px';
 
         container.appendChild(copyButton);
         container.appendChild(codeLabel);
