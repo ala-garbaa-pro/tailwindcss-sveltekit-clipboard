@@ -39,8 +39,8 @@ export function initUI(searchState: Writable<"opened" | "closed">) {
         codeLabel.style.top = '0';
         codeLabel.style.left = '8px';
 
-        container.appendChild(codeLabel);
         container.appendChild(copyButton);
+        container.appendChild(codeLabel);
 
         const parentElement: Element | null = preElement;
 
